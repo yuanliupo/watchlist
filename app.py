@@ -55,15 +55,20 @@ def forge():
     db.session.commit()
     click.echo('Done.')
 
+@app.context_processor
+def inject_user():
+    user = db.session.execute(select(User)).scalar()
+    return dict(user = user)
+
 @app.route('/')
 def index():
-    user = db.session.execute(select(User)).scalar()
-    movies = db.session.execute(select(Movie)).scalar()
-    return render_template('index.html', user = user, movies = movies)
+    movies = db.session.execute(select(Movie)).scalars().all()
+    return render_template('index.html', movies = movies)
+
 @app.route('/index')
 @app.route('/home')
 def hello():
-    return "<h1>Hello visitor</h1><img src = '127.0.0.1:5000/25年中秋.png'>"
+    return "<h1>Hello visitor</h1>"
 
 @app.route('/user/<name>')
 def user_page(name):
@@ -71,11 +76,19 @@ def user_page(name):
 
 @app.route('/test')
 def test_url_for():
+    name = db.session.execute(select(User)).scalars().all()
+    movies = db.session.execute(select(Movie)).scalars().all()
     print(url_for('hello'))
     print(url_for('user_page', name = 'greyli'))
     print(url_for('user_page', name = 'peter'))
     print(url_for('test_url_for'))
     print(url_for('test_url_for', num = 2)) 
-    print(f"User name {name}")
+    print(f"User name {name[0].name}")
     print(movies)
+    print(type(movies))
     return 'Test page'
+
+@app.errorhandler(404)
+def page_not_found(error):
+    
+    return render_template('404.html'), 404

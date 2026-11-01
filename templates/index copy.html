@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "utf-8">
+        <title>{{ user.name }}'s Watchlist</title>
+        <link rel = "icon" href = "{{ url_for('static', filename = 'img/25年中秋.png') }}">
+        <link rel = "stylesheet" href = "{{ url_for('static', filename='style.css')}}" type="text/css">
+    </head>
+    <body>
+        <h2>
+            <img alt = "Avatar" class = "avatar" height = '50px', width = '50px'src = "{{ url_for('static', filename = 'img/jevlin.jpg') }}">
+            {{ user.name }}'s Watchlist
+        </h2>
+        <p>{{ movies|length }} Titles</p>
+        <ul class = "movie-list">
+            {% for movie in movies %}
+            <li>{{ movie.title }} - {{ movie.year }}</li>
+            {% endfor %}
+        </ul>
+        <footer>
+            <img alt = "Help" class = "帮助" height = "40px", width = "40px" src = "{{ url_for('static', filename = '/img/帮助.png')}}">
+            <small>&copy; 2025 <a href="http:helloflask.com/book/3">HelloFlask</a></small>
+        </footer>
+    </body>
+</html>
